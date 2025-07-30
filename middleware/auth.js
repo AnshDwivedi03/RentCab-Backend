@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-export const userAuth = async (req, res, next) => {
+ const userAuth = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
@@ -24,3 +24,4 @@ export const userAuth = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+export default userAuth;
