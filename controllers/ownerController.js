@@ -24,9 +24,8 @@ export const changeRole = async (req, res) => {
 export const addCar = async (req, res) => {
   try {
     const { _id } = req.user;
-   let car= JSON.parse(req.body.carData);
+    let car = JSON.parse(req.body.carData);
     const imageFile = req.file;
-   
 
     // Upload image to ImageKit
     const fileBuffer = fs.readFileSync(imageFile.path);
@@ -64,6 +63,43 @@ export const addCar = async (req, res) => {
     await Car.create({ ...car, owner: _id, image });
 
     res.json({ success: true, message: "Car Added" });
+  } catch (error) {
+    console.error("Error changing role:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while changing the role.",
+      error: error.message,
+    });
+  }
+};
+
+export const getOwnerCars = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const cars = await Car.find({ owner: _id });
+    res.json({ success: true, cars });
+  } catch (error) {
+    console.error("Error changing role:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while changing the role.",
+      error: error.message,
+    });
+  }
+};
+
+export const toggleCarAvailability = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { carId } = req.body;
+    const car = await Car.findById(carId);
+
+    //checking car belongs to the user
+    if (car.owner.toString() !== _id.toString())
+      return res.json({ success: false, message: "Unauthorized" });
+    car.isAvailable = !car.isAvailable;
+    await car.save();
+    res.json({ success: true, message: "Availability toggled" });
   } catch (error) {
     console.error("Error changing role:", error);
     res.status(500).json({
