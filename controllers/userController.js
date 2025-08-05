@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
     const user = await User.create({ name, email, password: hashPass });
 
     const token = generateToken(user._id);
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    res.cookie("token", token, { httpOnly: false, sameSite: "strict" });
 
     res.status(201).json({ Success: true, token, user });
   } catch (err) {
@@ -50,7 +50,7 @@ export const loginUser = async (req, res) => {
     }
 
     const token = generateToken(user._id);
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    res.cookie("token", token, { httpOnly: false, sameSite: "strict" });
 
     res.json({ token, user });
   } catch (error) {
