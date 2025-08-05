@@ -1,11 +1,11 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Car from "../models/Car.js";
 
 function generateToken(uid) {
   return jwt.sign({ id: uid }, process.env.JWT_SECRET, { expiresIn: "1h" });
 }
-
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -64,3 +64,12 @@ export const getUserData = async (req, res) => {
     res.json({ user });
   } catch (error) {}
 };
+export const getCars =async(req,res)=>{
+  try{
+      const cars=await Car.find({isAvailable:true})
+      res.json({success:true,cars})
+  }
+  catch(error){
+res.status(500).json({ message: error.message });
+  }
+}
