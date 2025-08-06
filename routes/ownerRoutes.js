@@ -1,5 +1,5 @@
 import express from "express";
-import userAuth from "../middleware/auth.js";
+import {userAuth} from "../middleware/auth.js";
 import { changeRole, addCar, getOwnerCars, toggleCarAvailability, deleteCar, getDashboardData, updateUserImage } from "../controllers/ownerController.js";
 import upload from "../middleware/multer.js";
 

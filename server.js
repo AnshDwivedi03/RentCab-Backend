@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import connectDB from "./config/db.js"
 import cors from "cors";
-import cookieParser from "cookie-parser";
+
 import userRoutes from "./routes/userRoutes.js";
 import ownerRoute from "./routes/ownerRoutes.js";
 import bookingRoute from "./routes/bookingRoutes.js";
@@ -12,7 +12,6 @@ import bookingRoute from "./routes/bookingRoutes.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 app.use('/api/user', userRoutes);
 app.use('/api/owner', ownerRoute);

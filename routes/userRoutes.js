@@ -1,6 +1,6 @@
 import express from "express";
 import { loginUser, registerUser,getUserData, getCars  } from "../controllers/userController.js";
-import  userAuth  from "../middleware/auth.js";
+import  {userAuth } from "../middleware/auth.js";
 
 const userRoutes= express();
 

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import Car from "../models/Car.js";
 
 function generateToken(uid) {
-  return jwt.sign({ id: uid }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  return jwt.sign(uid, process.env.JWT_SECRET);
 }
 export const registerUser = async (req, res) => {
   try {
@@ -25,11 +25,9 @@ export const registerUser = async (req, res) => {
 
     const hashPass = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashPass });
+    const token = generateToken(user._id.toString());
+    res.status(200).json({ success: true, token, user });
 
-    const token = generateToken(user._id);
-    res.cookie("token", token, { httpOnly: false, sameSite: "strict" });
-
-    res.status(201).json({ Success: true, token, user });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -49,10 +47,8 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = generateToken(user._id);
-    res.cookie("token", token, { httpOnly: false, sameSite: "strict" });
-
-    res.json({ token, user });
+    const token = generateToken(user._id.toString());
+    res.status(200).json({ success: true, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -61,15 +57,16 @@ export const loginUser = async (req, res) => {
 export const getUserData = async (req, res) => {
   try {
     const { user } = req;
-    res.json({ user });
-  } catch (error) {}
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
-export const getCars =async(req,res)=>{
-  try{
-      const cars=await Car.find({isAvailable:true})
-      res.json({success:true,cars})
+export const getCars = async (req, res) => {
+  try {
+    const cars = await Car.find({ isAvailable: true });
+    res.json({ success: true, cars });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  catch(error){
-res.status(500).json({ message: error.message });
-  }
-}
+};
