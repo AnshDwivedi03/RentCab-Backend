@@ -8,17 +8,16 @@ export const userAuth = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
-    const decoded = jwt.decode(token, process.env.JWT_SECRET);
+    const userId = jwt.decode(token, process.env.JWT_SECRET); // ✅ correct
 
-    if (!decoded) {
+    if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    req.user = await User.findById(decoded.id).select("-password");
+    req.user = await User.findById(userId).select("-password");
 
     next();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
