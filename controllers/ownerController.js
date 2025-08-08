@@ -110,29 +110,31 @@ export const toggleCarAvailability = async (req, res) => {
   }
 };
 
-//api to delete car..
 export const deleteCar = async (req, res) => {
   try {
     const { _id } = req.user;
     const { carId } = req.body;
-    const car = await Car.findById(carId);
 
-    //checking is car belongs to the user
-    if (car.owner.toString() !== _id.toString())
-      return res.json({ success: false, message: "Unauthorized" });
-    car.owner = null;
-    car.isAvailable = false;
-    await car.save();
-    res.json({ success: true, message: "Availability toggled" });
+    // Find the car and ensure it belongs to the current owner
+    const car = await Car.findOne({ _id: carId, owner: _id });
+    if (!car) {
+      return res.json({ success: false, message: "Unauthorized or car not found" });
+    }
+
+    // Delete the car directly (no validation triggered)
+    await Car.deleteOne({ _id: carId });
+
+    res.json({ success: true, message: "Car deleted successfully" });
   } catch (error) {
-    console.error("Error changing role:", error);
+    console.error("Error deleting car:", error);
     res.status(500).json({
       success: false,
-      message: "Something went wrong while changing the role.",
+      message: "Something went wrong while deleting the car.",
       error: error.message,
     });
   }
 };
+
 
 //Api to get Dashboard Data..
 export const getDashboardData = async (req, res) => {
