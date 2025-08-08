@@ -4,8 +4,8 @@ import{ userAuth} from "../middleware/auth.js";
 const bookingRoute= express.Router();
 bookingRoute.post('/check-availability',checkAvailabilityofCars);
 bookingRoute.post('/create',userAuth,createBooking);
-bookingRoute.post('/user',userAuth,getUserBookings);
-bookingRoute.post('/owner',userAuth,getOwnerBookings);
+bookingRoute.get('/user',userAuth,getUserBookings);
+bookingRoute.get('/owner',userAuth,getOwnerBookings);
 bookingRoute.post('/change-status',userAuth,changeBookingStatus);
 
 export default bookingRoute;
