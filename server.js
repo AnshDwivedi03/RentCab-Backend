@@ -18,7 +18,7 @@ app.use("/api/owner", ownerRoute);
 app.use("/api/bookings", bookingRoute);
 
 const PORT = process.env.PORT || 4000;
-app.get("/", () => console.log("Server is running"));
+app.get("/", (req,res) => res.send("Server is running"));
 app.listen(PORT, () => {
   console.log(`Server is running at Port  ${PORT} `);
 });
